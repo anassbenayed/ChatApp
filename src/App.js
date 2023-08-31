@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import Chat from "./screens/Chat";
+import Login from "./screens/Login";
+import "./App.css";
+import { useSelector } from "react-redux";
 
 function App() {
+  const { isAuthenticated } = useSelector((state) => state.UserReducer);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Router>
+        {isAuthenticated ? (
+          <div className="app_body">
+            <Sidebar />
+            <Routes>
+              <Route path="/" element={<Navigate to="/rooms" />} />
+              <Route path="/rooms/:roomId" element={<Chat />} />
+            </Routes>
+          </div>
+        ) : (
+          <Login />
+        )}
+      </Router>
     </div>
   );
 }
